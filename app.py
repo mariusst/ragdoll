@@ -1,15 +1,7 @@
-from langchain.document_loaders import PyPDFLoader
-from langchain.indexes import VectorstoreIndexCreator
-from langchain.chains import retrieval_qa
-from langchain.embeddings import OllamaEmbeddings
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-
-from langchain_ollama.llms import OllamaLLM
-from langchain_ollama.chat_models import ChatOllama
-
 import streamlit as st
+import itertools
 
-llm = OllamaLLM(model="llama3.1:8b")
+from index import collection, chain
 
 # Initialize message array
 if "messages" not in st.session_state:
@@ -27,7 +19,16 @@ if prompt:
     st.chat_message("user").markdown(prompt)
     st.session_state.messages.append({ "role": "user", "content": prompt })
 
+    # Return similar documents by vector search
+    results = collection.query(query_texts=[prompt], n_results=10)['documents']
+    results = itertools.chain.from_iterable(results) # Flatten array
+
     # Generate and save AI response
-    response = llm.invoke(st.session_state.messages)
+    response = chain.invoke({
+        "prompt": prompt,
+        "results": "\n\n".join(results)
+    })
+
+    # Display and save chatbot response
     st.chat_message("assistant").markdown(response)
     st.session_state.messages.append({ "role": "assistant", "content": response })
