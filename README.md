@@ -23,3 +23,6 @@ pip install streamlit langchain langchain-ollama langchain-community
 ```sh
 streamlit run app.py
 ```
+
+## about
+Initiated and supported by the project ["Arad AI: Customization of artificial intelligence assistants"](https://bibliotecaarad.ro/devops-arad-ai/) carried out within the [DevOps Club](https://bibliotecaarad.ro/makerspace/clubul-devops/) at the Arad county public library [Makerspace](https://bibliotecaarad.ro/makerspace/).
